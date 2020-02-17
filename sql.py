@@ -3,13 +3,15 @@ import sqlite3
 import re
 import itertools
 
+
 # Create the database
 connection = sqlite3.connect('/Users/rexgodbout/PycharmProjects/GradeBook/gradebook.db')
 cursor = connection.cursor()
 
 # Create the table
 cursor.execute('DROP TABLE IF EXISTS students')
-cursor.execute('CREATE TABLE Students (studentId INTEGER NOT NULL, studentName TEXT NOT NULL, gradeCourse INTEGER NOT NULL, courseName TEXT NOT NULL)')
+cursor.execute(
+    'CREATE TABLE Students (studentId INTEGER NOT NULL, studentName TEXT NOT NULL, gradeCourse INTEGER NOT NULL, courseName TEXT NOT NULL)')
 cursor.execute('DROP TABLE IF EXISTS courses')
 cursor.execute('CREATE TABLE Courses (courseId INTEGER NOT NULL, teacherName TEXT NOT NULL, courseName TEXT NOT NULL)')
 connection.commit()
@@ -30,6 +32,46 @@ for c in creader2:
 # Close the csv file, commit changes, and close the connection
 csvfile.close()
 csvfile2.close()
+
+
+
+
+
+
+
+def load_database():
+
+
+# Create the database
+    connection = sqlite3.connect('/Users/rexgodbout/PycharmProjects/GradeBook/gradebook.db')
+    cursor = connection.cursor()
+
+    # Create the table
+    cursor.execute('DROP TABLE IF EXISTS students')
+    cursor.execute(
+        'CREATE TABLE Students (studentId INTEGER NOT NULL, studentName TEXT NOT NULL, gradeCourse INTEGER NOT NULL, courseName TEXT NOT NULL)')
+    cursor.execute('DROP TABLE IF EXISTS courses')
+    cursor.execute('CREATE TABLE Courses (courseId INTEGER NOT NULL, teacherName TEXT NOT NULL, courseName TEXT NOT NULL)')
+    connection.commit()
+
+    # Load the CSV file into CSV reader
+    csvfile = open('students.csv', 'r')
+    creader = csv.reader(csvfile, delimiter=',', quotechar='|')
+
+    csvfile2 = open('courses.csv', 'r')
+    creader2 = csv.reader(csvfile2, delimiter=',', quotechar='|')
+
+    for s in creader:
+        cursor.execute('INSERT INTO Students VALUES (?,?,?,?)', s)
+
+    for c in creader2:
+        cursor.execute('INSERT INTO Courses VALUES (?,?,?)', c)
+
+    # Close the csv file, commit changes, and close the connection
+    csvfile.close()
+    csvfile2.close()
+    connection.commit()
+    connection.close()
 
 def sql_query_execute(query):
     cursor.execute(query)
@@ -76,8 +118,9 @@ while request != 'quit':
         break
 
     # valid courses in database
-
-
+    if request == 'load':
+        load_database()
+        print("load successsful")
     courses = ['cs205', 'cs201', 'cs275', 'cs110', 'cs21', 'cs292']
 
     # --- queries for obtaining all students with a specific grade, taking a specified course, or is passing a course --
@@ -226,6 +269,7 @@ while request != 'quit':
             short_req()  # issue message if request is too short
     else:
         print("Invalid request. Type 'help' for available options.")
+
+
 connection.commit()
 connection.close()
-
