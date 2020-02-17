@@ -1,6 +1,7 @@
 import csv
 import sqlite3
 import re
+import itertools
 
 # Create the database
 connection = sqlite3.connect('/Users/rexgodbout/PycharmProjects/GradeBook/gradebook.db')
@@ -33,15 +34,16 @@ csvfile2.close()
 def sql_query_execute(query):
     cursor.execute(query)
     rows = cursor.fetchall()
+
     if len(rows) == 0:
         print("No data for query")
-    for row in rows:
-        print(row)
+    print(str(rows).replace("('", "").replace("',)", "\n").replace(",", "").replace("[", "").replace("]", ""))
+
 
 
 # help message for all user commands (*to be filled in)
 def help_msg():
-    print('Valid courses: CS205, CS201, CS275, CS110, CS21, & CS292')
+    print('Valid courses: CS201, CS205, CS201, CS275, CS110, CS21, & CS292')
 
 
 # message function for short request
@@ -187,8 +189,10 @@ while request != 'quit':
                     name = rTerms[2] + ' ' + rTerms[3]
                     cursor.execute("SELECT courseName from Students WHERE studentName = '" + str(name + "'"))
                     courseName = cursor.fetchall()
-                    print(courseName)
-                    query_param = "SELECT teacherName from Courses WHERE courseName= '" + str(courseName + "'")
+                    courseFinal = list(itertools.chain(*courseName))
+
+                    print(courseFinal[0])
+                    query_param = "SELECT teacherName from Courses WHERE courseName= '" + str(courseFinal[0]) + "'"
                     sql_query_execute(query_param)
 
                 except IndexError:
@@ -210,7 +214,9 @@ while request != 'quit':
             if rTerms[1] == 'student':
                 try:  # see if valid name can be extracted from user input
                     name = rTerms[2] + ' ' + rTerms[3]
-                    print('SELECT course from StudentTable where name =', name)
+
+                    query_param = "SELECT courseName from Students WHERE studentName = '" + str(name + "'")
+                    sql_query_execute(query_param)
                 except IndexError:
                     valid_name()  # prompt user to enter valid name if request is too short
             else:
