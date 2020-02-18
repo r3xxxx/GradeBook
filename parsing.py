@@ -3,15 +3,15 @@
 # help message for all user commands (*to be filled in)
 def help_msg():
    print("Try entering one of the following commands:"
-          "\nstudents grades *grade value*"
-          "\nstudents course *course*"
-          "\nstudents passing *course*"
-          "\ngrade student *name*"
-          "\ngrade student *id number*"
-          "\nprofessor course *course*"
-          "\nprofessor student *student name*"
-          "\ncourse student *student name*"
-          "\nprofessor courses *professor name*")
+          "\n~ students grades *grade value*"
+          "\n~ students course *course*"
+          "\n~ students passing *course*"
+          "\n~ grade student *name*"
+          "\n~ grade student *id number*"
+          "\n~ professor course *course*"
+          "\n~ professor student *student name*"
+          "\n~ course student *student name*"
+          "\n~ professor courses *professor name*")
 
 
 # message function for short request
