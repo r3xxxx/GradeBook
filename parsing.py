@@ -136,8 +136,11 @@ while request != 'quit':
                 if len(rTerms) == 3:
                     print('Enter a valid first and last name for a professor')
                 else:
-                    name = rTerms[2] + ' ' + rTerms[3]
-                    print('SELECT course from CourseTable where Professor =', name)
+                    try:
+                        name = rTerms[2] + ' ' + rTerms[3]
+                        print('SELECT course from CourseTable where Professor =', name)
+                    except IndexError:
+                        print('Missing first or last name of professor')
             elif rTerms[1] == 'student':
                 try:
                     name = rTerms[2] + ' ' + rTerms[3]
