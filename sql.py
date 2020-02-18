@@ -1,6 +1,7 @@
 import csv
 import sqlite3
 import re
+import Parse as p
 import itertools
 
 
@@ -131,22 +132,13 @@ while request != 'quit':
     >STUDENTS COURSE *COURSE*
     >STUDENTS PASSING *COURSE*
     '''
-    if rTerms[0] == 'students':
+    if rTerms[0] == 'students' or p.errorParsing(rTerms[0],'students','default',2,1):
         if len(rTerms) >= 2:
-            # next valid terms
-            validTerms = ['grades', 'course', 'passing']
-            # is the second term of the request valid?
-            for term in validTerms:
-                if term == rTerms[1]:
-                    invalid = False
-            if invalid:
-                print("Missing 'grades'/'course'/'passing' after 'students'")
 
-            # if valid and there's at least three terms of the request
-            if not invalid:
+
                 if len(rTerms) >= 3:
                     # 'students grades ...'
-                    if rTerms[1] == 'grades':
+                    if rTerms[0]+rTerms[1] == 'students grades' or p.errorParsing(request,"students grades",rTerms[2],2,0):
                         try:
                             num = int(rTerms[2])
                             if 0 <= num <= 100:
@@ -159,14 +151,14 @@ while request != 'quit':
                         except ValueError:
                             print('Grade must be an integer value')
                     # obtain all students taking a particular course
-                    elif rTerms[1] == 'course':
+                    elif rTerms[0]+rTerms[1] == 'students course' or p.errorParsing(request,"students course",rTerms[2],3,0):
                         if rTerms[2] in courses:  # check if course is valid
                             query_param = "SELECT studentName from Students WHERE courseName ='" + str(rTerms[2] + "'")
                             sql_query_execute(query_param)
                         else:
                             view_courses()
                     # returns students passing a particular course
-                    elif rTerms[1] == 'passing':
+                    elif rTerms[0]+rTerms[1] == 'students passing' or p.errorParsing(request,"students passing",rTerms[2],3,0):
                         if rTerms[2] in courses:
                             query_param = "SELECT studentName from Students WHERE gradeCourse >= 30 AND courseName ='" + str(rTerms[2] + "'")
                             sql_query_execute(query_param)
@@ -183,9 +175,9 @@ while request != 'quit':
         >GRADE STUDENT *NAME*
         >GRADE STUDENT *ID NUMBER*
         '''
-    elif rTerms[0] == 'grade':
+    elif rTerms[0] == 'grade' or p.errorParsing(rTerms[0], "grade", "default", 1, 1):
         if len(rTerms) >= 2:
-            if rTerms[1] == 'student':
+            if rTerms[0]+rTerms[1] == 'grade student' or p.errorParsing(request,"grade student",rTerms[2],2,0)
                 if len(rTerms) >= 3:
                     try:  # try to convert input to integer for student ID
                         studentID = int(rTerms[2])
@@ -198,8 +190,7 @@ while request != 'quit':
                             sql_query_execute(query_param)
                         except IndexError:
                             valid_name()
-                else:
-                    print('Missing student ID or name')  # prompt user to enter name or ID
+
             else:
                 print("Missing 'student' after 'grade'")  # prompt if user has invalid second term
         else:
@@ -215,9 +206,9 @@ while request != 'quit':
         > PROFESSOR COURSE *COURSE*
         > PROFESSOR STUDENT *NAME*
         '''
-    elif rTerms[0] == 'professor':
+    elif rTerms[0] == 'professor' or p.errorParsing(rTerms[0], "professor", "default", 2, 1):
         if len(rTerms) >= 2:
-            if rTerms[1] == 'course':  # obtain professors who teach a particular course
+            if rTerms[0]+rTerms[1] == 'professor course' or p.errorParsing(request,"professor course",rTerms[2],2,0):   # obtain professors who teach a particular course
                 if len(rTerms) == 3:
                     if rTerms[2] in courses:  # is the course name the user entered valid?
 
@@ -227,7 +218,7 @@ while request != 'quit':
                         view_courses()
                 else:
                     print('Missing course number')  # if only two valid terms in request
-            elif rTerms[1] == 'student':
+            elif rTerms[0]+rTerms[1] == 'professor student' or p.errorParsing(request,"professor student",rTerms[2],2,0):
                 try:
                     name = rTerms[2] + ' ' + rTerms[3]
                     cursor.execute("SELECT courseName from Students WHERE studentName = '" + str(name + "'"))
@@ -240,9 +231,7 @@ while request != 'quit':
 
                 except IndexError:
                     valid_name()
-            else:
-                print("Did you mean 'course'/'student' after 'professor'?")  # if second term is not 'course' or
-                # 'student'
+
         else:
             short_req()  # user request too short
 
@@ -252,9 +241,10 @@ while request != 'quit':
         >COURSE STUDENT *NAME*
         '''
 
-    elif rTerms[0] == 'course':
+
+    elif rTerms[0] == 'course' or p.errorParsing(rTerms[0], "course", "default", 2, 1):
         if len(rTerms) >= 2:
-            if rTerms[1] == 'student':
+            if rTerms[0]+rTerms[1] == 'course student' or p.errorParsing(request,"course student",rTerms[2],2,0):
                 try:  # see if valid name can be extracted from user input
                     name = rTerms[2] + ' ' + rTerms[3]
 
@@ -262,8 +252,7 @@ while request != 'quit':
                     sql_query_execute(query_param)
                 except IndexError:
                     valid_name()  # prompt user to enter valid name if request is too short
-            else:
-                print("Did you mean to type 'student' after 'course'?")  # if second request term is invalid
+
 
         else:
             short_req()  # issue message if request is too short
