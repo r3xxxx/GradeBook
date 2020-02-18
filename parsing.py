@@ -2,7 +2,16 @@
 
 # help message for all user commands (*to be filled in)
 def help_msg():
-    print('Valid courses: CS205, CS201, CS275, CS110, CS21, & CS292')
+   print("Try entering one of the following commands:"
+          "\nstudents grades *grade value*"
+          "\nstudents course *course*"
+          "\nstudents passing *course*"
+          "\ngrade student *name*"
+          "\ngrade student *id number*"
+          "\nprofessor course *course*"
+          "\nprofessor student *student name*"
+          "\ncourse student *student name*"
+          "\nprofessor courses *professor name*")
 
 
 # message function for short request
