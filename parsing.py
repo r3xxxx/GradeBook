@@ -120,6 +120,7 @@ while request != 'quit':
         '''
         > PROFESSOR COURSE *COURSE*
         > PROFESSOR STUDENT *NAME*
+        > PROFESSOR COURSES *PROFESSOR NAME*
         '''
     elif rTerms[0] == 'professor':
         if len(rTerms) >= 2:
@@ -131,6 +132,12 @@ while request != 'quit':
                         view_courses()
                 else:
                     print('Missing course number')  # if only two valid terms in request
+            elif rTerms[1] == 'courses':  # get all courses taught by desired professor
+                if len(rTerms) == 3:
+                    print('Enter a valid first and last name for a professor')
+                else:
+                    name = rTerms[2] + ' ' + rTerms[3]
+                    print('SELECT course from CourseTable where Professor =', name)
             elif rTerms[1] == 'student':
                 try:
                     name = rTerms[2] + ' ' + rTerms[3]
