@@ -177,7 +177,7 @@ while request != 'quit':
         '''
     elif rTerms[0] == 'grade' or p.errorParsing(rTerms[0], "grade", "default", 1, 1):
         if len(rTerms) >= 2:
-            if rTerms[0]+rTerms[1] == 'grade student' or p.errorParsing(request,"grade student",rTerms[2],2,0)
+            if rTerms[0]+rTerms[1] == 'grade student' or p.errorParsing(request,"grade student",rTerms[2],2,0):
                 if len(rTerms) >= 3:
                     try:  # try to convert input to integer for student ID
                         studentID = int(rTerms[2])

@@ -6,9 +6,9 @@ def errorParsing(userInput, command, value, error, type):
     userInput=userInput[0:len(command)]
     if userInput[0]==command[0]: # to not get GRADE STUDENT AND STUDENTS GRADE confused
         setCommand="["+command+"]"
-        print(setCommand)#to make sure that the findall searches for chars and not the keyword
+        #print(setCommand)#to make sure that the findall searches for chars and not the keyword
         matches = re.findall(setCommand, userInput)
-        print(matches)
+        #print(matches)
         if len(matches) > (len(command)-error):
             if type==0:
                 correctCommand = "Did you mean "+command +" "+ value + " ?(y/n): "
