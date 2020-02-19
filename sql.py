@@ -17,7 +17,7 @@ def load_database():
         cursor = connection.cursor()
     open_db = True
     # Create the table
-    print("im loading db")
+
     cursor.execute('DROP TABLE IF EXISTS students')
     cursor.execute(
         'CREATE TABLE Students (studentId INTEGER NOT NULL, studentName TEXT NOT NULL, gradeCourse INTEGER NOT NULL, courseName TEXT NOT NULL)')
@@ -74,7 +74,7 @@ def help_msg():
           "\n~ professor course *course*"
           "\n~ professor student *student name*"
           "\n~ course student *student name*"
-          "\n~ professor courses *professor name*")
+          "\n~ professor classes *professor name*")
 
 
 # message function for short request
@@ -222,11 +222,17 @@ while request != 'quit':
             elif rTerms[0]+rTerms[1] == 'professorstudent' or p.errorParsing(request,"professor student",rTerms[2],1,0):
                 try:
                     name = rTerms[2] + ' ' + rTerms[3]
+
+                    if open_db == False:
+                        open_db = True
+                        connection = sqlite3.connect('/Users/rexgodbout/PycharmProjects/GradeBook/gradebook.db')
+                        cursor = connection.cursor()
                     cursor.execute("SELECT courseName from Students WHERE studentName = '" + str(name + "'"))
                     courseName = cursor.fetchall()
+                    connection.commit()
                     courseFinal = list(itertools.chain(*courseName))
 
-                    print(courseFinal[0])
+                    #print(courseFinal[0])
                     query_param = "SELECT teacherName from Courses WHERE courseName= '" + str(courseFinal[0]) + "'"
                     sql_query_execute(query_param)
 
