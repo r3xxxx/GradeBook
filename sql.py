@@ -5,6 +5,17 @@ import Parse as p
 import itertools
 
 
+print("   _____            __    ___             __ ")
+print("  /  ___/______ ___/ /__ / _ )___  ___   / /__ ")
+print(" / (_ / __/ _ `/ _ /  -_) _  / _ \/ _ \ /  '_/ ")
+print("  \___/_/ \_,_/\_,_/\__/____/\___/\__ // / \_\ ")
+
+print("please enter command to continue!")
+print("type help for list available of available commands ")
+
+
+
+
 
 open_db = False
 
