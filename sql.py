@@ -5,49 +5,19 @@ import Parse as p
 import itertools
 
 
-# Create the database
-connection = sqlite3.connect('/Users/rexgodbout/PycharmProjects/GradeBook/gradebook.db')
-cursor = connection.cursor()
 
-# Create the table
-cursor.execute('DROP TABLE IF EXISTS students')
-cursor.execute(
-    'CREATE TABLE Students (studentId INTEGER NOT NULL, studentName TEXT NOT NULL, gradeCourse INTEGER NOT NULL, courseName TEXT NOT NULL)')
-cursor.execute('DROP TABLE IF EXISTS courses')
-cursor.execute('CREATE TABLE Courses (courseId INTEGER NOT NULL, teacherName TEXT NOT NULL, courseName TEXT NOT NULL)')
-connection.commit()
-
-# Load the CSV file into CSV reader
-csvfile = open('students.csv', 'r')
-creader = csv.reader(csvfile, delimiter=',', quotechar='|')
-
-csvfile2 = open('courses.csv', 'r')
-creader2 = csv.reader(csvfile2, delimiter=',', quotechar='|')
-
-for s in creader:
-    cursor.execute('INSERT INTO Students VALUES (?,?,?,?)', s)
-
-for c in creader2:
-    cursor.execute('INSERT INTO Courses VALUES (?,?,?)', c)
-
-# Close the csv file, commit changes, and close the connection
-csvfile.close()
-csvfile2.close()
-
-
-
-
-
-
+open_db = False
 
 def load_database():
 
-
+    global cursor, connection, open_db
+    if open_db == False:
 # Create the database
-    connection = sqlite3.connect('/Users/rexgodbout/PycharmProjects/GradeBook/gradebook.db')
-    cursor = connection.cursor()
-
+        connection = sqlite3.connect('/Users/rexgodbout/PycharmProjects/GradeBook/gradebook.db')
+        cursor = connection.cursor()
+    open_db = True
     # Create the table
+    print("im loading db")
     cursor.execute('DROP TABLE IF EXISTS students')
     cursor.execute(
         'CREATE TABLE Students (studentId INTEGER NOT NULL, studentName TEXT NOT NULL, gradeCourse INTEGER NOT NULL, courseName TEXT NOT NULL)')
@@ -72,10 +42,16 @@ def load_database():
     csvfile.close()
     csvfile2.close()
     connection.commit()
-    connection.close()
+
 
 def sql_query_execute(query):
+    global cursor, open_db, connection
+    if open_db == False:
+        open_db = True
+        connection = sqlite3.connect('/Users/rexgodbout/PycharmProjects/GradeBook/gradebook.db')
+        cursor = connection.cursor()
     cursor.execute(query)
+    connection.commit()
     rows = cursor.fetchall()
 
     if len(rows) == 0:
@@ -132,9 +108,10 @@ while request != 'quit':
 
     # valid courses in database
     if request == 'load':
+        loaded = True
         load_database()
         print("load successsful")
-    courses = ['cs205', 'cs201', 'cs275', 'cs110', 'cs21', 'cs292']
+    courses = ['cs205', 'cs201', 'cs275', 'cs110', 'cs21', 'cs292','cs124','cs120','cs167','cs222','cs225','cs224','cs166','cs121','cs64','cs254','cs202','cs142','cs148','cs006','cs008']
 
     # --- queries for obtaining all students with a specific grade, taking a specified course, or is passing a course --
     # example query structure below:
@@ -281,7 +258,7 @@ while request != 'quit':
         else:
             short_req()  # issue message if request is too short
     else:
-        print("Invalid request. Type 'help' for available options.")
+        print("Type 'help' to view more available options for more options.")
 
 
 connection.commit()
