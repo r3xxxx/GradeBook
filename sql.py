@@ -59,7 +59,7 @@ def sql_query_execute(query):
     global cursor, open_db, connection
     if open_db == False:
         open_db = True
-        connection = sqlite3.connect('/Users/rexgodbout/PycharmProjects/GradeBook/gradebook.db')
+        connection = sqlite3.connect('/Users/lugle/PycharmProjects/GradeBook/gradebook.db')
         cursor = connection.cursor()
     cursor.execute(query)
     connection.commit()
@@ -151,19 +151,21 @@ while request != 'quit':
                         except ValueError:
                             print('Grade must be an integer value')
                     # obtain all students taking a particular course
-                    elif rTerms[0]+rTerms[1] == 'studentscourse' or p.errorParsing(request,"students course",rTerms[2],3,0):
+                    elif rTerms[0]+rTerms[1] == 'studentscourse' or p.errorParsing(request,"students course",rTerms[2],2,0):
                         if rTerms[2] in courses:  # check if course is valid
                             query_param = "SELECT studentName from Students WHERE courseName ='" + str(rTerms[2] + "'")
                             sql_query_execute(query_param)
                         else:
                             view_courses()
                     # returns students passing a particular course
-                    elif rTerms[0]+rTerms[1] == 'studentspassing' or p.errorParsing(request,"students passing",rTerms[2],3,0):
+                    elif rTerms[0]+rTerms[1] == 'studentspassing' or p.errorParsing(request,"students passing",rTerms[2],2,0):
                         if rTerms[2] in courses:
                             query_param = "SELECT studentName from Students WHERE gradeCourse >= 30 AND courseName ='" + str(rTerms[2] + "'")
                             sql_query_execute(query_param)
                         else:
                             view_courses()
+                    else:
+                        print("Invalid term")
                 else:
                     print("Missing grade or course number.")  # if only two valid terms in user request
         else:
@@ -192,7 +194,7 @@ while request != 'quit':
                             valid_name()
 
             else:
-                print("Missing 'student' after 'grade'")  # prompt if user has invalid second term
+                print("Invalid term")  # prompt if user has invalid second term
         else:
             short_req()
 
@@ -218,7 +220,7 @@ while request != 'quit':
                         view_courses()
                 else:
                     print('Missing course number')  # if only two valid terms in request
-            elif rTerms[1] == 'classes':  # get all courses taught by desired professor
+            elif rTerms[0]+rTerms[1] == 'professorclasses' or p.errorParsing(request,"professor classes",rTerms[2],1,0):  # get all courses taught by desired professor
                 if len(rTerms) == 3:
                     print('Enter a valid first and last name for a professor')
                 else:
@@ -249,7 +251,8 @@ while request != 'quit':
 
                 except IndexError:
                     valid_name()
-
+            else:
+                print("Invalid term")
         else:
             short_req()  # user request too short
 
@@ -275,7 +278,7 @@ while request != 'quit':
         else:
             short_req()  # issue message if request is too short
     else:
-        print("Type 'help' to view more available options for more options.")
+        print("Invalid. Type 'help' to view more options.")
 
 
 connection.commit()
